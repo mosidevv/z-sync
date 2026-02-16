@@ -51,7 +51,7 @@ zstyle ':omz:update' mode reminder  # just remind me to update when it's time
 # DISABLE_AUTO_TITLE="true"
 
 # Uncomment the following line to enable command auto-correction.
-# ENABLE_CORRECTION="true"
+ENABLE_CORRECTION="true"
 
 # Uncomment the following line to display red dots whilst waiting for completion.
 # You can also set it to another string to have that shown instead of the default red dots.
@@ -92,6 +92,7 @@ plugins=(
     dirhistory                 # Alt-Left, Up and Right
     macos                      # Lots of MacOS functionality
     colored-man-pages          # Colored Manual Help Pages
+    H-S-MW                     # History Search Multi-word
 )
 
 source $ZSH/oh-my-zsh.sh
@@ -104,14 +105,19 @@ source $ZSH/oh-my-zsh.sh
 # export LANG=en_US.UTF-8
 
 # Preferred editor for local and remote sessions
-# if [[ -n $SSH_CONNECTION ]]; then
-#   export EDITOR='vim'
-# else
-#   export EDITOR='nvim'
-# fi
+ if [[ -n $SSH_CONNECTION ]]; then
+   export EDITOR='fresh'
+ else
+   export EDITOR='nano'
+ fi
 
 # Compilation flags
 # export ARCHFLAGS="-arch $(uname -m)"
+
+# Load OpenClaw environment variables
+   if [ -f "$HOME/.openclaw/.env" ]; then
+       source "$HOME/.openclaw/.env"
+   fi
 
 # Set personal aliases, overriding those provided by Oh My Zsh libs,
 # plugins, and themes. Aliases can be placed here, though Oh My Zsh
@@ -127,5 +133,11 @@ source $ZSH/oh-my-zsh.sh
 
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
-export PATH="/opt/homebrew/bin:$PATH"
-export PATH="$(brew --prefix)/opt/curl/bin:$PATH"
+#export PATH="/opt/homebrew/bin:$PATH"
+#export PATH="$(brew --prefix)/opt/curl/bin:$PATH"
+
+# Bitwarden ZSH completion
+eval "$(bw completion --shell zsh); compdef _bw bw;"
+
+# OpenClaw Completion
+# source "/home/orchestrator/.openclaw/completions/openclaw.zsh"

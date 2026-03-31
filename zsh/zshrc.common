@@ -1,8 +1,12 @@
 autoload -Uz compinit
-compinit
+# Only regenerate completion dump once per day
+if [[ $(date +'%j') != $(stat -f '%Sm' -t '%j' ~/.zcompdump 2>/dev/null) ]]; then
+  compinit
+else
+  compinit -C
+fi
 
 source "$ZSYNC_ROOT/custom/themes/powerlevel10k/powerlevel10k.zsh-theme"
-[[ -f ~/.p10k.zsh ]] && source ~/.p10k.zsh
 
 # Set name of the theme to load --- if set to "random", it will
 # load a random theme each time Oh My Zsh is loaded, in which case,
@@ -90,11 +94,7 @@ export LESS_TERMCAP_so=$'\e[1;44;33m'
 export LESS_TERMCAP_ue=$'\e[0m'
 export LESS_TERMCAP_us=$'\e[1;32m'
 
-# History Search Multi-word
-autoload -Uz history-search-end
-zle -N history-search-end
-bindkey '^R' history-incremental-search-backward
-bindkey '^S' history-incremental-search-forward
+# History search handled by atuin (^R)
 
 # sudo
 bindkey -M emacs '\e\e' sudo-command-line
@@ -109,11 +109,11 @@ bindkey -M viins '\e\e' sudo-command-line
 # export LANG=en_US.UTF-8
 
 # Preferred editor for local and remote sessions
- if [[ -n $SSH_CONNECTION ]]; then
-   export EDITOR='fresh'
- else
-   export EDITOR='nano'
- fi
+if [[ -n $SSH_CONNECTION ]]; then
+  export EDITOR='nano'
+else
+  export EDITOR='fresh'
+fi
 
 # Compilation flags
 # export ARCHFLAGS="-arch $(uname -m)"
@@ -129,12 +129,11 @@ bindkey -M viins '\e\e' sudo-command-line
 # Example aliases
 # alias zshconfig="mate ~/.zshrc"
 
-# To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
-[[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
-
-
-# Bitwarden ZSH completion
-eval "$(bw completion --shell zsh); compdef _bw bw;"
+# Bitwarden ZSH completion (cached — regenerate with: bw completion --shell zsh > ~/.bw_completion.zsh)
+if [[ -f ~/.bw_completion.zsh ]]; then
+  source ~/.bw_completion.zsh
+  compdef _bw bw
+fi
 
 
 # Clean framework loader
@@ -148,6 +147,11 @@ fi
 
 # P10k loader
 [[ -f ~/.p10k.zsh ]] && source ~/.p10k.zsh
+
+# ---- Modern CLI tools ----
+
+# zoxide — smarter cd (replaces z plugin)
+eval "$(zoxide init zsh)"
 
 # ---- Plugins ----
 

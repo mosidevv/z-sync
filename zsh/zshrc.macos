@@ -1,2 +1,6 @@
+export ITERM_ENABLE_SHELL_INTEGRATION_WITH_TMUX=YES
 export PATH="/opt/homebrew/bin:$PATH"
-export PATH="$(brew --prefix)/opt/curl/bin:$PATH"
+export PATH="/opt/homebrew/opt/curl/bin:$PATH"
+
+# Macfetch — login shells only (avoids running in every tmux/split pane)
+[[ -o login ]] && macfetch

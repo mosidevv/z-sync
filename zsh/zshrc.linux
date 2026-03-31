@@ -1,10 +1,57 @@
-# OpenClaw Completion
-source "/home/orchestrator/.openclaw/completions/openclaw.zsh"
+# ── Linuxbrew ─────────────────────────────────────────────────────────────────
+eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
 
-# Load OpenClaw environment variables
-  119 │    if [ -f "$HOME/.openclaw/.env" ]; then
-  120 │        source "$HOME/.openclaw/.env"
-  121 │    fi
-  
-# If you come from bash you might have to change your $PATH.
-# export PATH=$HOME/bin:$HOME/.local/bin:/usr/local/bin:$PATH
+# ── PATH ──────────────────────────────────────────────────────────────────────
+export PATH="$HOME/.local/bin:$HOME/bin:$PATH"
+
+# ── OpenClaw ──────────────────────────────────────────────────────────────────
+if [[ -f "$HOME/.openclaw/completions/openclaw.zsh" ]]; then
+  source "$HOME/.openclaw/completions/openclaw.zsh"
+fi
+if [[ -f "$HOME/.openclaw/.env" ]]; then
+  source "$HOME/.openclaw/.env"
+fi
+
+# ── eza (modern ls) ───────────────────────────────────────────────────────────
+alias ls='eza --icons'
+alias ll='eza -lh --icons --git'
+alias la='eza -lah --icons --git'
+alias lt='eza --tree --icons -L 2'
+alias lta='eza --tree --icons -L 2 -a'
+
+# ── lazygit ───────────────────────────────────────────────────────────────────
+alias lg='lazygit'
+
+# ── yazi — cd into last dir on exit ──────────────────────────────────────────
+yy() {
+  local tmp cwd
+  tmp="$(mktemp -t "yazi-cwd.XXXXXX")"
+  yazi "$@" --cwd-file="$tmp"
+  cwd="$(cat -- "$tmp")" && [ -n "$cwd" ] && [ "$cwd" != "$PWD" ] && cd -- "$cwd"
+  rm -f -- "$tmp"
+}
+
+# ── fzf — keybindings + file search via fd ───────────────────────────────────
+source <(fzf --zsh)
+export FZF_DEFAULT_COMMAND='fd --type f --hidden --follow --exclude .git'
+export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
+export FZF_ALT_C_COMMAND='fd --type d --hidden --follow --exclude .git'
+export FZF_DEFAULT_OPTS='--height 40% --layout=reverse --border'
+
+# ── atuin — shell history (replaces Ctrl+R; must come after fzf) ─────────────
+eval "$(atuin init zsh)"
+
+# ── navi — interactive cheat sheets (Ctrl+N) ─────────────────────────────────
+eval "$(navi widget zsh)"
+bindkey '^N' _navi_widget
+bindkey -r '^G'
+
+# ── ffmpeg helpers ────────────────────────────────────────────────────────────
+ff-to-mp4()   { ffmpeg -i "$1" -c:v libx264 -crf 23 -preset fast -c:a aac -b:a 128k "${2:-${1%.*}.mp4}"; }
+ff-compress() { ffmpeg -i "$1" -c:v libx264 -crf 28 -preset slower -c:a aac -b:a 96k "${2:-compressed_${1}}"; }
+ff-audio()    { ffmpeg -i "$1" -vn -c:a libmp3lame -q:a 2 "${2:-${1%.*}.mp3}"; }
+ff-gif()      { ffmpeg -i "$1" -vf "fps=15,scale=640:-1:flags=lanczos,split[s0][s1];[s0]palettegen[p];[s1][p]paletteuse" -loop 0 "${2:-${1%.*}.gif}"; }
+ff-trim()     { ffmpeg -i "$1" -ss "$2" -to "$3" -c copy "${4:-trimmed_${1}}"; }
+ff-scale()    { ffmpeg -i "$1" -vf "scale=${2}:${3}" -c:a copy "${4:-scaled_${1}}"; }
+ff-mute()     { ffmpeg -i "$1" -c:v copy -an "${2:-muted_${1}}"; }
+alias ff-info='ffprobe -v quiet -print_format json -show_streams'

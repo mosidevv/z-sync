@@ -1,0 +1,358 @@
+% zoxide, navigation, z
+# Jump to best match
+z <dir>
+
+# Jump matching multiple terms
+z <dir1> <dir2>
+
+# Jump to previous directory
+z -
+
+# Interactive fuzzy picker
+zi <dir>
+
+# List all known directories
+zoxide query -l
+
+% fzf, fuzzy, search
+# Fuzzy insert a file path at cursor (Ctrl+T)
+Ctrl+T
+
+# Fuzzy cd into a subdirectory (Alt+C)
+Alt+C
+
+# Fuzzy complete — kill, ssh, etc.
+kill **<Tab>
+
+# Pipe into fzf
+<cmd> | fzf
+
+# Example: pick a git branch
+git branch | fzf
+
+% atuin, history
+# Open atuin TUI history search (Ctrl+R)
+Ctrl+R
+
+# Search history for a term
+atuin search <query>
+
+# Show most-used commands stats
+atuin stats
+
+# Sync history across machines
+atuin sync
+
+# Login to atuin cloud
+atuin login
+
+% eza, ls, files
+# Long list with git status
+eza -lh --icons --git
+
+# Long list with hidden files
+eza -lah --icons --git
+
+# Tree view 2 levels deep
+eza --tree --icons -L 2
+
+# Tree view with hidden files
+eza --tree --icons -L 2 -a
+
+# Sort by size
+eza -l --sort=size
+
+# Sort by modified time
+eza -l --sort=mod
+
+# Tree N levels deep
+eza --tree -L <depth>
+
+% fd, find, files
+# Find files named foo
+fd <name>
+
+# Search in a specific directory
+fd <name> <dir>
+
+# Find by extension
+fd -e <ext>
+
+# Files only
+fd -t f <name>
+
+# Directories only
+fd -t d <name>
+
+# Include hidden files
+fd -H <name>
+
+# Run a command on each result
+fd <name> -x <cmd> {}
+
+# Exclude a directory
+fd <name> -E <exclude_dir>
+
+% dust, disk, usage
+# Disk usage of current directory
+dust
+
+# Show top N items
+dust -n <count>
+
+# Max depth
+dust -d <depth>
+
+# Specific path
+dust <path>
+
+% yazi, files, tui, file manager
+# Open yazi and cd into last dir on quit
+yy
+
+# Open yazi without cd-on-exit
+yazi
+
+% ripgrep, rg, grep, search
+# Search for pattern in cwd
+rg <pattern>
+
+# Search in a specific directory
+rg <pattern> <dir>
+
+# Search only specific file type
+rg -t <type> <pattern>
+
+# Case insensitive
+rg -i <pattern>
+
+# Print matching file names only
+rg -l <pattern>
+
+# Show N lines of context
+rg -C <lines> <pattern>
+
+# Include .gitignored files
+rg --no-ignore <pattern>
+
+# Regex with glob filter
+rg '<pattern>' -g '<glob>'
+
+% sd, sed, replace
+# Replace in a file
+sd '<old>' '<new>' <file>
+
+# Replace across multiple files
+sd '<old>' '<new>' <file1> <file2>
+
+# Pipe replace
+echo "<text>" | sd '<old>' '<new>'
+
+# Regex with capture group
+sd -p '<regex(.*)>' 'new$1' <file>
+
+% jq, json
+# Pretty-print JSON
+jq '.' <file>
+
+# Get a field
+jq '.<field>' <file>
+
+# Iterate array
+jq '.<field>[]' <file>
+
+# First element
+jq '.<field>[0]' <file>
+
+# List keys
+jq 'keys' <file>
+
+# Count items
+jq 'length' <file>
+
+# Filter by value
+jq 'select(.<field> > <value>)' <file>
+
+# Reshape output
+jq '{id: .id, name: .name}' <file>
+
+# Pipe and extract
+cat <file> | jq '.<array>[] | .<field>'
+
+% glow, markdown
+# Render a markdown file
+glow <file>
+
+# Browse markdown files in cwd
+glow .
+
+# Paged output
+glow -p <file>
+
+# With a theme
+glow -s <theme> <file>
+
+# Full cheat sheet (alias)
+cheat
+
+% tldr, help, man
+# Quick reference for a command
+tldr <command>
+
+# Update local cache
+tldr -u
+
+% lazygit, git, lg
+# Open lazygit
+lg
+
+% git, delta, diff
+# Diff (automatically uses delta)
+git diff
+
+# Log with patch (automatically uses delta)
+git log -p
+
+# Navigate diff sections (inside delta)
+n
+
+# Navigate diff sections backwards
+p
+
+% gh, github, cli
+# List pull requests
+gh pr list
+
+# Create a pull request
+gh pr create
+
+# View a pull request
+gh pr view <number>
+
+# Checkout a pull request
+gh pr checkout <number>
+
+# List issues
+gh issue list
+
+# Create an issue
+gh issue create
+
+# List CI runs
+gh run list
+
+# Watch a CI run
+gh run view
+
+# Clone a repo
+gh repo clone <user>/<repo>
+
+# Open repo in browser
+gh repo view --web
+
+% tmux, multiplexer
+# New session
+tmux
+
+# Named session
+tmux new -s <name>
+
+# List sessions
+tmux ls
+
+# Attach to session
+tmux a -t <name>
+
+# New window (Ctrl+B c)
+Ctrl+B c
+
+# Next/prev window
+Ctrl+B n
+
+# Split vertical (Ctrl+B %)
+Ctrl+B %
+
+# Split horizontal (Ctrl+B ")
+Ctrl+B "
+
+# Move between panes
+Ctrl+B <arrow>
+
+# Detach
+Ctrl+B d
+
+# Scroll mode
+Ctrl+B [
+
+% zellij, multiplexer
+# New session
+zellij
+
+# New pane
+Ctrl+P c
+
+# Move between panes
+Ctrl+P <arrow>
+
+# Close pane
+Ctrl+P x
+
+# New tab
+Ctrl+T c
+
+# Next/prev tab
+Ctrl+T n
+
+# Detach
+Ctrl+O d
+
+# Quit
+Ctrl+Q
+
+% btop, system, monitor
+# Open btop
+btop
+
+% hyperfine, benchmark
+# Benchmark a command
+hyperfine '<cmd>'
+
+# Compare two commands
+hyperfine '<cmd1>' '<cmd2>'
+
+# With warmup runs
+hyperfine --warmup <n> '<cmd>'
+
+# Custom run count
+hyperfine --runs <n> '<cmd>'
+
+# Export results to markdown
+hyperfine --export-markdown <file> '<cmd>'
+
+% ffmpeg, video, ff
+# Re-encode to mp4
+ff-to-mp4 <input>
+
+# Re-encode to mp4 with custom output
+ff-to-mp4 <input> <output.mp4>
+
+# Shrink file size
+ff-compress <input>
+
+# Extract audio as mp3
+ff-audio <input>
+
+# Convert to gif
+ff-gif <input>
+
+# Trim clip by timestamps
+ff-trim <input> <start> <end>
+
+# Resize video
+ff-scale <input> <width> <height>
+
+# Strip audio track
+ff-mute <input>
+
+# Show stream info
+ff-info <input>

@@ -79,11 +79,26 @@ COMPLETION_WAITING_DOTS="true"
 # Add wisely, as too many plugins slow down shell startup.
 # Below are manual replacements since no longer using oh-my-zsh
 
-# dirhistory
-autoload -Uz dirhistory
-zle -N dirhistory
+# dirhistory — Alt+Left/Right to navigate directory stack
+setopt AUTO_PUSHD PUSHD_IGNORE_DUPS PUSHD_SILENT
+DIRSTACKSIZE=20
+_dirhistory_back()    { builtin popd &>/dev/null && zle reset-prompt }
+_dirhistory_forward() { : }  # no forward stack in zsh without extra tooling
+zle -N dirhistory-backward _dirhistory_back
+zle -N dirhistory-forward  _dirhistory_forward
 bindkey '\e[1;3D' dirhistory-backward
 bindkey '\e[1;3C' dirhistory-forward
+
+# sudo — double-ESC to prepend/remove sudo
+sudo-command-line() {
+  [[ -z $BUFFER ]] && zle up-history
+  if [[ $BUFFER == sudo\ * ]]; then
+    LBUFFER="${LBUFFER#sudo }"
+  else
+    LBUFFER="sudo $LBUFFER"
+  fi
+}
+zle -N sudo-command-line
 
 # coloredmanpages
 export LESS_TERMCAP_mb=$'\e[1;31m'

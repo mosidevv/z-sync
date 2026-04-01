@@ -1,5 +1,9 @@
 # ── Linuxbrew ─────────────────────────────────────────────────────────────────
-eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
+if [[ -f /home/linuxbrew/.linuxbrew/bin/brew ]]; then
+  eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
+elif [[ -f $HOME/.linuxbrew/bin/brew ]]; then
+  eval "$($HOME/.linuxbrew/bin/brew shellenv)"
+fi
 
 # ── PATH ──────────────────────────────────────────────────────────────────────
 export PATH="$HOME/.local/bin:$HOME/bin:$PATH"

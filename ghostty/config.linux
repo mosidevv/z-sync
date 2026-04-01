@@ -1,0 +1,8 @@
+# ── Linux-specific ────────────────────────────────────────────────────────────
+# No macos-* options here
+
+# Quick terminal (Linux — uses ctrl+` same as common but listed for clarity)
+keybind = global:ctrl+grave_accent=toggle_quick_terminal
+quick-terminal-position = top
+quick-terminal-screen = main
+quick-terminal-animation-duration = 0.2

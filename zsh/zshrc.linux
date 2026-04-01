@@ -47,6 +47,7 @@ eval "$(atuin init zsh)"
 
 # ── navi — interactive cheat sheets (Ctrl+N) ─────────────────────────────────
 eval "$(navi widget zsh)"
+zle -N _navi_widget
 bindkey '^N' _navi_widget
 bindkey -r '^G'
 
